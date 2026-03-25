@@ -14,6 +14,9 @@ public class Proyecto225262ADRIANA {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        Interfaces.Inicio ventana = new Interfaces.Inicio();
+    ventana.setVisible(true);
+    ventana.setLocationRelativeTo(null);
         // TODO code application logic here
     }
     

@@ -9,12 +9,66 @@ package Interfaces;
  * @author Adriana Julian
  */
 public class DocumentosUsuario extends javax.swing.JFrame {
+    // Variable para guardar el nombre del usuario que vamos a revisar
+    private String usuarioActual;
+
+    // Método para que la ventana anterior le pase el nombre
+    public void setUsuarioActual(String nombre) {
+        this.usuarioActual = nombre;
+   
+        lblTitulo.setText("Documentos de: " + nombre);
+        cargarDocumentosDelUsuario();
+    
+    }
+    
+    public void cargarDocumentosDelUsuario() {
+        
+        // 1. Buscamos al usuario en la TablaHash
+        Object resultado = Interfaces.Inicio.tablaUsuarios.get(usuarioActual);
+        
+        if (resultado != null) {
+            MainClass.Usuario user = (MainClass.Usuario) resultado;
+            
+            // 2. Preparamos la tabla visual para llenarla
+            try {
+                javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tablaDocumentos.getModel();
+                modelo.setRowCount(0); // Limpiamos la tabla de datos anteriores
+                
+                // 3. Obtenemos la lista de documentos
+                EDD.Lista listaDocs = user.getDocumentos(); 
+                
+                // 4. Verificamos que la lista exista y no esté vacía
+                if (listaDocs != null && !listaDocs.isEmpty()) {
+                    
+                    EDD.Nodo aux = listaDocs.getpFirst(); 
+                    
+                    // Recorremos nodo por nodo
+                    while (aux != null) {
+                        MainClass.Documento doc = (MainClass.Documento) aux.getData();
+                        
+                  
+                        modelo.addRow(new Object[]{
+                            doc.getNombre(), 
+                            doc.getTipo(),    
+                            doc.getTamano()  
+                        });
+                        
+                        aux = aux.getpNext(); 
+                    }
+                }
+                
+            } catch (Exception e) {
+                System.out.println("Error al cargar la tabla de documentos: " + e.getMessage());
+            }
+        }
+    }
 
     /**
      * Creates new form DocumentosUsuario
      */
     public DocumentosUsuario() {
         initComponents();
+        
     }
 
     /**
@@ -26,21 +80,271 @@ public class DocumentosUsuario extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitulo = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        btnAnadir = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaDocumentos = new javax.swing.JTable();
+        btnEnviar = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblTitulo.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        lblTitulo.setText("Documentos de:");
+
+        jButton1.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        jButton1.setText("Volver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        btnAnadir.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        btnAnadir.setText("Añadir Documento");
+        btnAnadir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnadirActionPerformed(evt);
+            }
+        });
+
+        jButton3.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        jButton3.setText("Eliminar Documento");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        tablaDocumentos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Tipo", "Tamano"
+            }
+        ));
+        jScrollPane2.setViewportView(tablaDocumentos);
+
+        btnEnviar.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        btnEnviar.setText("Enviar Impresion");
+        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(124, 124, 124)
+                .addComponent(lblTitulo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(12, 12, 12))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(93, 93, 93)
+                        .addComponent(btnAnadir, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(117, 117, 117)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton3))))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(lblTitulo)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAnadir)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEnviar)
+                .addGap(0, 16, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAnadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnadirActionPerformed
+
+        try {
+            // 1. Pedir el nombre del documento
+            String nombreDoc = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el nombre del documento:");
+            if (nombreDoc == null || nombreDoc.trim().isEmpty()) {
+                return; // Si el usuario cancela o deja vacío, salimos
+            }
+
+            // 2. Pedir el tipo de documento (PDF, DOCX, TXT, etc.)
+            String tipoDoc = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el tipo de documento (ej. PDF, DOCX):");
+            if (tipoDoc == null || tipoDoc.trim().isEmpty()) {
+                return;
+            }
+
+            // 3. Pedir el tamaño (tiene que ser un número)
+            String tamanoStr = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el tamaño del documento (solo números):");
+            if (tamanoStr == null || tamanoStr.trim().isEmpty()) {
+                return;
+            }
+            
+            int tamanoDoc = Integer.parseInt(tamanoStr); // Convertimos el texto a número
+
+            // 4. Buscar al usuario actual en la TablaHash
+            Object resultado = Interfaces.Inicio.tablaUsuarios.get(usuarioActual);
+            
+            if (resultado != null) {
+                MainClass.Usuario user = (MainClass.Usuario) resultado;
+
+                // 5. Crear el documento usando el constructor exacto de la clase Documento
+                MainClass.Documento nuevoDoc = new MainClass.Documento(nombreDoc, tamanoDoc, tipoDoc);
+
+                // 6. Agregarlo a la lista de documentos de este usuario
+                user.agregarDocumento(nuevoDoc);
+
+                // 7. Refrescar la tabla visual para que aparezca el nuevo documento de inmediato
+                cargarDocumentosDelUsuario(); 
+                
+                // 8. Mostrar mensaje de éxito
+                javax.swing.JOptionPane.showMessageDialog(this, "¡Documento '" + nombreDoc + "' añadido con éxito!");
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error: No se encontró al usuario actual.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+            
+        } catch (NumberFormatException e) {
+            // Este error salta si el usuario escribe letras en lugar de números en el tamaño
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: El tamaño debe ser un número entero válido.", "Error de formato", javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAnadirActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+// 1. Verificamos que el usuario haya seleccionado un documento en la tabla
+        int filaSeleccionada = tablaDocumentos.getSelectedRow();
+        
+        if (filaSeleccionada == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione un documento de la tabla para eliminarlo.", "Aviso", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // 2. Obtenemos el nombre del documento seleccionado (asumimos que está en la primera columna, la 0)
+        String nombreDoc = tablaDocumentos.getValueAt(filaSeleccionada, 0).toString();
+        
+        // 3. Confirmamos si realmente quiere eliminarlo
+        int confirmacion = javax.swing.JOptionPane.showConfirmDialog(this, "¿Está seguro que desea eliminar el documento '" + nombreDoc + "'?", "Confirmar eliminación", javax.swing.JOptionPane.YES_NO_OPTION);
+        
+        if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
+            
+            // 4. Buscamos al usuario en la memoria
+            Object resultado = Interfaces.Inicio.tablaUsuarios.get(usuarioActual);
+            
+            if (resultado != null) {
+                MainClass.Usuario user = (MainClass.Usuario) resultado;
+                
+                // 5. Intentamos eliminar el documento usando el método de la clase
+                boolean eliminado = user.eliminarDocumento(nombreDoc);
+                
+                if (eliminado) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Documento eliminado con éxito.");
+                    cargarDocumentosDelUsuario(); // Refrescamos la tabla visual para que desaparezca
+                } else {
+                    // Según la clase Usuario, si retorna false es porque no existe o porque ya está en la cola
+                    javax.swing.JOptionPane.showMessageDialog(this, "No se pudo eliminar el documento. Es posible que ya esté enviado a la cola de impresión.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+// 1. Obtener el documento seleccionado de la tabla
+int filaSeleccionada = tablaDocumentos.getSelectedRow();
+if (filaSeleccionada == -1) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione un documento de la tabla.");
+    return;
+}
+
+String nombreDoc = tablaDocumentos.getValueAt(filaSeleccionada, 0).toString();
+
+
+Object busqueda = Interfaces.Inicio.tablaUsuarios.get(usuarioActual); 
+
+if (busqueda != null) {
+    MainClass.Usuario user = (MainClass.Usuario) busqueda;
+    MainClass.Documento doc = user.buscarDocumentoPorNombre(nombreDoc);
+
+    if (doc != null) {
+     
+        if (doc.isEnCola()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El documento ya se encuentra en la cola de espera.");
+            return;
+        }
+
+        // CÁLCULO DE PRIORIDAD (Etiqueta de Tiempo)
+        // Obtenemos el tiempo del reloj y restamos el ajuste según el tipo de usuario
+        int tiempoActual = Interfaces.Inicio.reloj.getTiempo();
+        int ajuste = user.getAjustePrioridad(); // -20 alta, -10 media, 0 baja
+        int etiquetaTiempo = tiempoActual + ajuste;
+
+        
+    
+        MainClass.RegistroImpresion regCola = new MainClass.RegistroImpresion(
+            doc.getNombre(), 
+            doc.getTamano(), 
+            doc.getTipo(), 
+            etiquetaTiempo, 
+            (ajuste < 0) // Es prioritario si el ajuste fue negativo
+        );
+
+        // Insertamos en el montículo mínimo usando la etiqueta como prioridad
+        Interfaces.Inicio.colaImpresion.insertar(regCola, etiquetaTiempo);
+
+        // REGISTRAR EL DUEÑO EN LA TABLA HASH 
+    
+        MainClass.RegistroUsuarioCola regDueño = new MainClass.RegistroUsuarioCola(
+            user.getUsername(), 
+            doc.getNombre(), 
+            etiquetaTiempo, 
+            Interfaces.Inicio.colaImpresion.getSize() - 1
+        );
+
+       
+        String claveHash = String.valueOf(etiquetaTiempo);
+        Interfaces.Inicio.duenosDocumentos.put(claveHash, regDueño);
+
+        // ACTUALIZAR ESTADO Y RELOJ
+        doc.setEnCola(true); // Marcamos el documento como "enviado"
+        Interfaces.Inicio.reloj.tic(); // El tiempo avanza con cada envío
+
+        javax.swing.JOptionPane.showMessageDialog(this, 
+            "Documento enviado exitosamente.\n" +
+            "Prioridad asignada (Etiqueta): " + etiquetaTiempo);
+    }
+}       // TODO add your handling code here:
+    }//GEN-LAST:event_btnEnviarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+Interfaces.Inicio menu = new Interfaces.Inicio();
+menu.setVisible(true);
+
+
+this.dispose();     // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +382,12 @@ public class DocumentosUsuario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAnadir;
+    private javax.swing.JButton btnEnviar;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTable tablaDocumentos;
     // End of variables declaration//GEN-END:variables
 }

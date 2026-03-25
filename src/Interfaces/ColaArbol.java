@@ -9,6 +9,55 @@ package Interfaces;
  * @author Adriana Julian
  */
 public class ColaArbol extends javax.swing.JFrame {
+    @Override
+public void paint(java.awt.Graphics g) {
+    super.paint(g); // Mantiene los componentes básicos si los hay
+    
+    // Antialiasing para que los círculos se vean suaves y no "pixelados"
+    java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
+    g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+
+    // Dibujamos el árbol empezando desde la raíz (índice 0)
+    // Parámetros: Graphics, índice, x inicial, y inicial, espacio entre nodos
+    dibujarArbol(g2, 0, getWidth() / 2, 80, getWidth() / 4);
+}
+
+private void dibujarArbol(java.awt.Graphics2D g, int i, int x, int y, int xOffset) {
+    EDD.MonticuloMinimo monticulo = Interfaces.Inicio.colaImpresion;
+    
+    if (i < monticulo.getSize()) {
+        EDD.ElementoMonticulo[] arreglo = monticulo.getHeap();
+        MainClass.RegistroImpresion reg = (MainClass.RegistroImpresion) arreglo[i].getData();
+        String etiqueta = String.valueOf(reg.getEtiquetaTiempo());
+
+        // 1. Dibujar conexiones con los hijos primero (para que queden detrás de los círculos)
+        g.setColor(java.awt.Color.BLACK);
+        int hijoIzq = 2 * i + 1;
+        int hijoDer = 2 * i + 2;
+
+        if (hijoIzq < monticulo.getSize()) {
+            g.drawLine(x, y, x - xOffset, y + 60);
+            dibujarArbol(g, hijoIzq, x - xOffset, y + 60, xOffset / 2);
+        }
+        if (hijoDer < monticulo.getSize()) {
+            g.drawLine(x, y, x + xOffset, y + 60);
+            dibujarArbol(g, hijoDer, x + xOffset, y + 60, xOffset / 2);
+        }
+
+        // 2. Dibujar el Nodo (Círculo)
+        g.setColor(new java.awt.Color(100, 149, 237)); // Color azul bonito (Cornflower Blue)
+        g.fillOval(x - 20, y - 20, 40, 40);
+        g.setColor(java.awt.Color.DARK_GRAY);
+        g.drawOval(x - 20, y - 20, 40, 40);
+
+        // 3. Dibujar la Etiqueta (Texto)
+        g.setColor(java.awt.Color.WHITE);
+        g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 12));
+        // Ajuste para centrar el texto según si es 1, 2 o 3 dígitos
+        int adjustX = (etiqueta.length() > 1) ? -10 : -5;
+        g.drawString(etiqueta, x + adjustX, y + 5);
+    }
+}
 
     /**
      * Creates new form ColaArbol
@@ -26,21 +75,53 @@ public class ColaArbol extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel1.setText("Grafica de Cola(Arbol)");
+
+        jButton1.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        jButton1.setText("Volver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(126, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(45, 45, 45)
+                .addComponent(jButton1)
+                .addGap(18, 18, 18))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jButton1))
+                .addContainerGap(265, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+Interfaces.Inicio menu = new Interfaces.Inicio();
+menu.setVisible(true);
+
+
+this.dispose();           // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +159,7 @@ public class ColaArbol extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

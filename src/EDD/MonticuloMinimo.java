@@ -28,6 +28,9 @@ public class MonticuloMinimo {
         this.heap = new ElementoMonticulo[capacity];
         this.size = 0;
     }
+    public ElementoMonticulo[] getHeap() {
+    return this.heap;
+}
 
     /**
      * Obtiene la cantidad de elementos almacenados.
@@ -278,4 +281,19 @@ public class MonticuloMinimo {
             }
         }
     }
+    public ElementoMonticulo eliminarEnPosicion(int index) {
+    if (index < 0 || index >= size) return null;
+
+    ElementoMonticulo eliminado = heap[index];
+    // Movemos el último elemento a la posición que queremos borrar
+    heap[index] = heap[size - 1];
+    size--;
+
+    // Reordenamos para que el montículo siga siendo válido
+    if (index < size) {
+        flotar(index);
+        hundir(index);
+    }
+    return eliminado;
+}
 }

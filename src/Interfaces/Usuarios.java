@@ -3,19 +3,59 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Interfaces;
-
+import EDD.Lista; 
+import EDD.ElementoMonticulo; 
+import EDD.MonticuloMinimo;
+import EDD.Nodo;
+import EDD.RegistroHash;
+import EDD.TablaHash;
+import MainClass.Usuario;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
 /**
  *
- * @author Adriana Julian
+ * @author Adriana
  */
 public class Usuarios extends javax.swing.JFrame {
+
+    javax.swing.table.DefaultTableModel modelo;
 
     /**
      * Creates new form Usuarios
      */
     public Usuarios() {
         initComponents();
+        this.setLocationRelativeTo(null); // Centra la ventana
+        this.modelo = (javax.swing.table.DefaultTableModel) tablaUsuarios.getModel();
+        cargarTabla();
     }
+    
+    public void cargarTabla() {
+ 
+    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tablaUsuarios.getModel();
+    modelo.setRowCount(0); // Limpiar filas viejas
+
+    // 2. Acceder al arreglo de listas de la Hash (que está en Inicio)
+    EDD.Lista[] listas = Interfaces.Inicio.tablaUsuarios.getTable();
+
+    // 3. Recorrer el arreglo
+    for (int i = 0; i < Interfaces.Inicio.tablaUsuarios.getSize(); i++) {
+        EDD.Lista listaActual = listas[i];
+        
+        if (!listaActual.isEmpty()) {
+            EDD.Nodo aux = listaActual.getpFirst();
+            while (aux != null) {
+                // Sacamos el RegistroHash y el objeto Usuario
+                EDD.RegistroHash reg = (EDD.RegistroHash) aux.getData();
+                MainClass.Usuario user = (MainClass.Usuario) reg.getValor();
+                
+                // Añadimos a la tabla visual
+                modelo.addRow(new Object[]{user.getUsername(), user.getTipo()});
+                aux = aux.getpNext();
+            }
+        }
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,21 +66,295 @@ public class Usuarios extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaUsuarios = new javax.swing.JTable();
+        btnVerDocumentos = new javax.swing.JButton();
+        btnEliminarUsuario = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
+        txtBuscar = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        btnAgregar = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel1.setText("Gestion de Usuarios");
+
+        tablaUsuarios.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Prioridad"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaUsuarios);
+        if (tablaUsuarios.getColumnModel().getColumnCount() > 0) {
+            tablaUsuarios.getColumnModel().getColumn(0).setResizable(false);
+            tablaUsuarios.getColumnModel().getColumn(1).setResizable(false);
+        }
+
+        btnVerDocumentos.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        btnVerDocumentos.setText("Ver Documentos de Usuario");
+        btnVerDocumentos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerDocumentosActionPerformed(evt);
+            }
+        });
+
+        btnEliminarUsuario.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        btnEliminarUsuario.setText("Eliminar Usuario");
+        btnEliminarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarUsuarioActionPerformed(evt);
+            }
+        });
+
+        btnVolver.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+
+        txtBuscar.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtBuscar.setText("Escribe un nombre para buscar un Usuario...");
+        txtBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        jLabel2.setText("Click ENTER para buscar");
+
+        btnAgregar.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        btnAgregar.setText("Agregar Usuario");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnVerDocumentos)
+                            .addComponent(jLabel2)
+                            .addComponent(btnEliminarUsuario)
+                            .addComponent(btnAgregar))
+                        .addGap(0, 29, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(117, 117, 117)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVolver)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnVolver)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAgregar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEliminarUsuario)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnVerDocumentos)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
+String nombre = txtBuscar.getText().trim();
+    
+    if (!nombre.isEmpty()) {
+        try {
+            // Buscamos en la tabla hash que está en la clase Inicio
+            // Usamos (MainClass.Usuario) para convertir el Object que devuelve la búsqueda
+            Object resultado = Interfaces.Inicio.tablaUsuarios.get(nombre);
+            
+            if (resultado != null) {
+                MainClass.Usuario encontrado = (MainClass.Usuario) resultado;
+                
+                // Actualizamos la tabla visual
+                DefaultTableModel modelo = (DefaultTableModel) tablaUsuarios.getModel();
+                modelo.setRowCount(0); // Limpiar tabla
+                modelo.addRow(new Object[]{encontrado.getUsername(), encontrado.getTipo()});
+            } else {
+                JOptionPane.showMessageDialog(this, "El usuario '" + nombre + "' no existe.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: Verifique que la clase Inicio tenga la tablaUsuarios como public static.");
+        }
+    } else {
+        cargarTabla(); // Si está vacío, recarga todos
+    }   // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscarActionPerformed
+
+    private void btnEliminarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarUsuarioActionPerformed
+String nombre = txtBuscar.getText().trim();
+    
+    if (nombre.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Por favor, escriba un nombre en la barra de búsqueda primero.");
+        return;
+    }
+    
+    Object resultado = Interfaces.Inicio.tablaUsuarios.get(nombre);
+    
+    if (resultado != null) {
+        int confirmacion = javax.swing.JOptionPane.showConfirmDialog(this, 
+                "¿Está seguro que desea eliminar al usuario '" + nombre + "'?", 
+                "Confirmar", 
+                javax.swing.JOptionPane.YES_NO_OPTION);
+                
+        if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
+            
+            // 1. Lo borramos de la TablaHash
+            Interfaces.Inicio.tablaUsuarios.remove(nombre);
+            
+            // 2. Mensaje y limpieza
+            javax.swing.JOptionPane.showMessageDialog(this, "El usuario '" + nombre + "' ha sido eliminado con éxito.");
+            txtBuscar.setText(""); 
+            
+            cargarTabla(); 
+        }
+        
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(this, "El usuario '" + nombre + "' no existe en el sistema.");
+    }    // TODO add your handling code here:
+    }//GEN-LAST:event_btnEliminarUsuarioActionPerformed
+
+    private void btnVerDocumentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerDocumentosActionPerformed
+String nombre = "";
+    
+    // 1. Primero vemos si el usuario hizo clic en alguna fila de la tabla visual
+    int filaSeleccionada = tablaUsuarios.getSelectedRow();
+    
+    if (filaSeleccionada != -1) {
+        // Sacamos el nombre de la columna 0 de la fila seleccionada
+        nombre = tablaUsuarios.getValueAt(filaSeleccionada, 0).toString();
+    } else {
+        // 2. Si no seleccionó nada en la tabla, revisamos si escribió algo en la barra
+        nombre = txtBuscar.getText().trim();
+    }
+    
+    // 3. Si ambos están vacíos, le pedimos que elija a alguien
+    if (nombre.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione un usuario en la tabla o escriba su nombre.");
+        return;
+    }
+    
+    // 4. Verificamos que el usuario realmente exista en la TablaHash
+    Object resultado = Interfaces.Inicio.tablaUsuarios.get(nombre);
+    
+    if (resultado != null) {
+        
+  
+        DocumentosUsuario ventanaDocs = new DocumentosUsuario();
+        
+        // Le pasamos el nombre usando el método que creamos
+        ventanaDocs.setUsuarioActual(nombre);
+        
+        // Mostramos la nueva ventana
+        ventanaDocs.setVisible(true);
+        
+        // Cerramos la ventana actual de Usuarios
+        this.dispose(); 
+        
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(this, "El usuario '" + nombre + "' no existe en el sistema.");
+    }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnVerDocumentosActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+try {
+            // 1. Pedir el nombre del nuevo usuario
+            String nombreNuevo = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el nombre del nuevo usuario:");
+            if (nombreNuevo == null || nombreNuevo.trim().isEmpty()) {
+                return; // Si cancela o deja vacío, no hacemos nada
+            }
+            
+            // Limpiamos los espacios en blanco extra por si acaso
+            nombreNuevo = nombreNuevo.trim();
+
+            //  Verificar que el usuario NO exista ya en la TablaHash
+            if (Interfaces.Inicio.tablaUsuarios.get(nombreNuevo) != null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error: El usuario '" + nombreNuevo + "' ya existe en el sistema.", "Usuario duplicado", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // 3. Pedir el tipo de prioridad usando un menú desplegable 
+            String[] opciones = {"alta", "media", "baja"};
+            String tipoNuevo = (String) javax.swing.JOptionPane.showInputDialog(
+                    this, 
+                    "Seleccione el tipo de prioridad del usuario:", 
+                    "Tipo de Usuario", 
+                    javax.swing.JOptionPane.QUESTION_MESSAGE, 
+                    null, 
+                    opciones, 
+                    opciones[2] 
+            );
+
+            if (tipoNuevo == null) {
+                return; // Si el usuario presiona "Cancelar" en esta ventanita, salimos
+            }
+
+            // 4. Crear el nuevo objeto Usuario con el constructor de tu clase
+            MainClass.Usuario nuevoUser = new MainClass.Usuario(nombreNuevo, tipoNuevo);
+
+            // 5. Guardarlo en la TablaHash global
+        
+            Interfaces.Inicio.tablaUsuarios.put(nombreNuevo, nuevoUser); 
+
+            // 6. Actualizar la tabla visual para que el nuevo usuario aparezca instantáneamente
+            javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tablaUsuarios.getModel();
+            
+            // Añadimos la fila
+            modelo.addRow(new Object[]{nombreNuevo, tipoNuevo});
+
+            // 7. Mensaje de éxito
+            javax.swing.JOptionPane.showMessageDialog(this, "¡Usuario '" + nombreNuevo + "' agregado con éxito!");
+
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+Interfaces.Inicio menu = new Interfaces.Inicio();
+menu.setVisible(true);
+
+
+this.dispose();        // TODO add your handling code here:
+    }//GEN-LAST:event_btnVolverActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +392,14 @@ public class Usuarios extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnEliminarUsuario;
+    private javax.swing.JButton btnVerDocumentos;
+    private javax.swing.JButton btnVolver;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tablaUsuarios;
+    private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

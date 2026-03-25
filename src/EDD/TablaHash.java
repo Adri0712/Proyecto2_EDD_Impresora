@@ -4,13 +4,15 @@
  */
 package EDD;
 
+import MainClass.Usuario;
+
 /**
  *
  * @author Adriana Julian
  */
 public class TablaHash {
     /** Arreglo de listas usado como tabla */
-    private Lista[] table;
+    public Lista[] table;
     
     /** Tamaño del arreglo hash */
     private int size;
@@ -37,6 +39,9 @@ public class TablaHash {
     public int getSize() {
         return size;
     }
+    public Lista[] getTable() {
+    return this.table;
+}
 
     /**
      * Calcula la posición hash de una clave.
@@ -173,4 +178,14 @@ public class TablaHash {
             table[i].destroy();
         }
     }
+    public void insertar(Object valor) {
+    // Si el valor es un Usuario, sacamos su nombre como clave
+    if (valor instanceof Usuario) {
+        Usuario u = (Usuario) valor;
+        String clave = u.getUsername();
+        int index = funcionHash(clave);
+        table[index].insertFinale(new RegistroHash(clave, valor));
+    }
+    
+}
 }

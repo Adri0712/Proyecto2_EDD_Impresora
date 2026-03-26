@@ -13,7 +13,7 @@
 * Carnet:20221130011
 
 *REPOSITORIO EN GITHUB:
-*[Pega aquí tu enlace de GitHub]
+https://github.com/Adri0712/Proyecto2_EDD_Impresora.git
 
 *ESTRUCTURAS IMPLEMENTADAS:
 *- Montículo Binario (Heap): Implementación propia para insertar y eliminar_min[cite: 22, 82].

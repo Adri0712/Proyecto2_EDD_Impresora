@@ -13,40 +13,45 @@ import EDD.ElementoMonticulo;
  * @author Adriana Julian
  */
 public class VerCola extends javax.swing.JFrame {
+    private javax.swing.JFrame ventanaPadre;
     public void mostrarSecuencia() {
-    DefaultTableModel modelo = (DefaultTableModel) tablaCola.getModel();
-    modelo.setRowCount(0); // Limpiar datos viejos
+DefaultTableModel modelo = (DefaultTableModel) tablaCola.getModel();
+        modelo.setRowCount(0); 
 
-    EDD.MonticuloMinimo monticulo = Interfaces.Inicio.colaImpresion;
-    int tamanoActual = monticulo.getSize();
-    
-    // Obtenemos el arreglo
-    EDD.ElementoMonticulo[] arreglo = monticulo.getHeap();
+        EDD.MonticuloMinimo monticulo = Interfaces.Inicio.colaImpresion;
+        int tamanoActual = monticulo.getSize();
+        EDD.ElementoMonticulo[] arreglo = monticulo.getHeap();
 
-    // Recorremos el montículo para mostrar la secuencia actual
-    for (int i = 0; i < tamanoActual; i++) {
-        // 1. Extraer datos del documento desde el Montículo
-        MainClass.RegistroImpresion reg = (MainClass.RegistroImpresion) arreglo[i].getData();
-        int etiqueta = reg.getEtiquetaTiempo();
+        for (int i = 0; i < tamanoActual; i++) {
+            MainClass.RegistroImpresion reg = (MainClass.RegistroImpresion) arreglo[i].getData();
+            int etiqueta = reg.getEtiquetaTiempo();
 
-        // 2. Buscar quién es el dueño usando la Tabla Hash
-        Object busqueda = Interfaces.Inicio.duenosDocumentos.get(String.valueOf(etiqueta));
-        String nombreUsuario = "Sin dueño";
+            // 1. Buscamos en la Hash (Probamos con String porque suele ser la llave)
+            Object busqueda = Interfaces.Inicio.duenosDocumentos.get(String.valueOf(etiqueta));
+            
+            // Si no lo encuentra como String, intentamos como int
+            if (busqueda == null) {
+                busqueda = Interfaces.Inicio.duenosDocumentos.get(String.valueOf(etiqueta));
+            }
 
-        if (busqueda != null) {
-            MainClass.RegistroUsuarioCola regUser = (MainClass.RegistroUsuarioCola) busqueda;
-            nombreUsuario = regUser.getUsername();
+            String nombrePersona = ""; // Empezamos vacío
+
+            if (busqueda != null) {
+                // EL ARREGLO PARA TU ERROR:
+                // Como el error dice que ya es un RegistroUsuarioCola, lo usamos directo
+                MainClass.RegistroUsuarioCola datos = (MainClass.RegistroUsuarioCola) busqueda;
+                nombrePersona = datos.getUsername(); 
+            }
+
+            // 3. Llenar la tabla
+            modelo.addRow(new Object[]{
+                etiqueta,
+                reg.getNombreDocumento(),
+                nombrePersona, // <--- Aquí aparecerá el nombre sin errores
+                reg.getTamanoDocumento() + " KB",
+                reg.getTipoDocumento()
+            });
         }
-
-        // 3. Añadir a la tabla
-        modelo.addRow(new Object[]{
-            etiqueta,
-            reg.getNombreDocumento(),
-            nombreUsuario,
-            reg.getTamanoDocumento() + " KB",
-            reg.getTipoDocumento()
-        });
-    }
 }
 
 
@@ -55,7 +60,9 @@ public class VerCola extends javax.swing.JFrame {
     /**
      * Creates new form ColaSecuencia
      */
-    public VerCola() {
+    public VerCola(javax.swing.JFrame padre) {
+        this.ventanaPadre = padre; 
+        this.setLocationRelativeTo(null);
         initComponents();
         mostrarSecuencia();
         
@@ -70,16 +77,43 @@ public class VerCola extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        btnEliminarSeleccionado = new javax.swing.JButton();
+        btnGrafico = new javax.swing.JButton();
+        btnSiguiente = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaCola = new javax.swing.JTable();
         btnVolver = new javax.swing.JButton();
-        btnSiguiente = new javax.swing.JButton();
-        btnEliminarSeleccionado = new javax.swing.JButton();
-        btnGrafico = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setForeground(new java.awt.Color(227, 249, 249));
+
+        jPanel1.setBackground(new java.awt.Color(220, 242, 242));
+
+        btnEliminarSeleccionado.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        btnEliminarSeleccionado.setText("Eliminar Documento Seleccionado");
+        btnEliminarSeleccionado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarSeleccionadoActionPerformed(evt);
+            }
+        });
+
+        btnGrafico.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        btnGrafico.setText("Ver Grafico de Prioridad");
+        btnGrafico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGraficoActionPerformed(evt);
+            }
+        });
+
+        btnSiguiente.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        btnSiguiente.setText("Atender al Siguiente");
+        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguienteActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel1.setText("Ver Cola");
@@ -110,72 +144,63 @@ public class VerCola extends javax.swing.JFrame {
             }
         });
 
-        btnSiguiente.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
-        btnSiguiente.setText("Atender al Siguiente");
-        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSiguienteActionPerformed(evt);
-            }
-        });
-
-        btnEliminarSeleccionado.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
-        btnEliminarSeleccionado.setText("Eliminar Documento Seleccionado");
-        btnEliminarSeleccionado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarSeleccionadoActionPerformed(evt);
-            }
-        });
-
-        btnGrafico.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
-        btnGrafico.setText("Ver Grafico de Prioridad");
-        btnGrafico.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGraficoActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(btnSiguiente)
+                                        .addGap(109, 109, 109)
+                                        .addComponent(btnEliminarSeleccionado))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(128, 128, 128)
+                                .addComponent(btnGrafico)))
+                        .addGap(0, 53, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(168, 168, 168)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVolver)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnVolver)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEliminarSeleccionado)
+                    .addComponent(btnSiguiente))
+                .addGap(18, 18, 18)
+                .addComponent(btnGrafico)
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(201, 201, 201)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnVolver))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(23, 23, 23)
-                            .addComponent(btnSiguiente)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnEliminarSeleccionado)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(132, 132, 132)
-                        .addComponent(btnGrafico)))
-                .addGap(0, 14, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1))
-                    .addComponent(btnVolver))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSiguiente)
-                    .addComponent(btnEliminarSeleccionado))
-                .addGap(18, 18, 18)
-                .addComponent(btnGrafico)
-                .addContainerGap(14, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -209,11 +234,10 @@ try {
     }//GEN-LAST:event_btnSiguienteActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-Interfaces.Inicio menu = new Interfaces.Inicio();
-menu.setVisible(true);
-
-
-this.dispose();      // TODO add your handling code here:
+if (ventanaPadre != null){
+    this.ventanaPadre.setVisible(true);
+}
+this.dispose();   // TODO add your handling code here:
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void btnEliminarSeleccionadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarSeleccionadoActionPerformed
@@ -239,7 +263,7 @@ javax.swing.JOptionPane.showMessageDialog(this, "Documento eliminado de la cola.
     }//GEN-LAST:event_btnEliminarSeleccionadoActionPerformed
 
     private void btnGraficoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGraficoActionPerformed
-Interfaces.ColaArbol grafica = new Interfaces.ColaArbol();
+Interfaces.ColaArbol grafica = new Interfaces.ColaArbol(this);
 grafica.setVisible(true);
 grafica.setLocationRelativeTo(null); // Centrarla        // TODO add your handling code here:
     }//GEN-LAST:event_btnGraficoActionPerformed
@@ -275,7 +299,7 @@ grafica.setLocationRelativeTo(null); // Centrarla        // TODO add your handli
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VerCola().setVisible(true);
+                new VerCola(null).setVisible(true);
             }
         });
     }
@@ -286,6 +310,7 @@ grafica.setLocationRelativeTo(null); // Centrarla        // TODO add your handli
     private javax.swing.JButton btnSiguiente;
     private javax.swing.JButton btnVolver;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tablaCola;
     // End of variables declaration//GEN-END:variables

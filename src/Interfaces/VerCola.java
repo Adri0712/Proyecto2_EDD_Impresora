@@ -26,10 +26,10 @@ DefaultTableModel modelo = (DefaultTableModel) tablaCola.getModel();
             MainClass.RegistroImpresion reg = (MainClass.RegistroImpresion) arreglo[i].getData();
             int etiqueta = reg.getEtiquetaTiempo();
 
-            // 1. Buscamos en la Hash (Probamos con String porque suele ser la llave)
+            // Buscamos en la Hash 
             Object busqueda = Interfaces.Inicio.duenosDocumentos.get(String.valueOf(etiqueta));
             
-            // Si no lo encuentra como String, intentamos como int
+           
             if (busqueda == null) {
                 busqueda = Interfaces.Inicio.duenosDocumentos.get(String.valueOf(etiqueta));
             }
@@ -37,17 +37,16 @@ DefaultTableModel modelo = (DefaultTableModel) tablaCola.getModel();
             String nombrePersona = ""; // Empezamos vacío
 
             if (busqueda != null) {
-                // EL ARREGLO PARA TU ERROR:
-                // Como el error dice que ya es un RegistroUsuarioCola, lo usamos directo
+         
                 MainClass.RegistroUsuarioCola datos = (MainClass.RegistroUsuarioCola) busqueda;
                 nombrePersona = datos.getUsername(); 
             }
 
-            // 3. Llenar la tabla
+            //  Llenar la tabla
             modelo.addRow(new Object[]{
                 etiqueta,
                 reg.getNombreDocumento(),
-                nombrePersona, // <--- Aquí aparecerá el nombre sin errores
+                nombrePersona, 
                 reg.getTamanoDocumento() + " KB",
                 reg.getTipoDocumento()
             });

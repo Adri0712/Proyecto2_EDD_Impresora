@@ -265,7 +265,7 @@ String nombre = txtBuscar.getText().trim();
             // 4. Actualizamos la tabla visual de esta misma ventana
             cargarTabla(); 
             
-            // 5. ¡LA MAGIA DEL CONTADOR! Le avisamos a la ventana Inicio que actualice su número
+            // 5.Le avisamos a la ventana Inicio que actualice su número
             if (this.ventanaPadre != null && this.ventanaPadre instanceof Inicio) {
                 ((Inicio)this.ventanaPadre).actualizarContador();
             }
@@ -354,7 +354,7 @@ try {
                 return; // Si el usuario presiona "Cancelar" en esta ventanita, salimos
             }
 
-            // 4. Crear el nuevo objeto Usuario con el constructor de tu clase
+            // 4. Crear el nuevo objeto Usuario con el constructor de la clase
             MainClass.Usuario nuevoUser = new MainClass.Usuario(nombreNuevo, tipoNuevo);
 
             // 5. Guardarlo en la TablaHash global

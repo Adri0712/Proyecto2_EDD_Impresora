@@ -345,7 +345,7 @@ if (busqueda != null) {
             return;
         }
 
-        // CÁLCULO DE PRIORIDAD (Etiqueta de Tiempo)
+   
         // Obtenemos el tiempo del reloj y restamos el ajuste según el tipo de usuario
         int tiempoActual = Interfaces.Inicio.reloj.getTiempo();
         int ajuste = user.getAjustePrioridad(); // -20 alta, -10 media, 0 baja
